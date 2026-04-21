@@ -1,7 +1,7 @@
 import random
 
 P_VALS = [0.01, 0.05, 0.10, 0.25, 0.40, 0.50, 0.60, 0.75, 0.90, 0.95, 0.99]
-X_VALS_A = [50, 100, 200, 400, 800]
+X_VALS_A = [100, 400, 800]
 X_B = 800
 PRICE_LIST_STEPS = [int(X_B * i * 0.05) for i in range(1, 20)]
 # = [40, 80, 120, 160, 200, 240, 280, 320, 360, 400, 440, 480, 520, 560, 600, 640, 680, 720, 760]
@@ -38,7 +38,7 @@ def generate_reliability(task_a_trials, n=9):
     reliability = []
     for i, t in enumerate(selected):
         reliability.append({
-            "trial": 55 + i + 1,
+            "trial": 33 + i + 1,
             "p": t["p"],
             "x": t["x"],
             "original_trial": t["trial"],

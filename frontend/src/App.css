@@ -275,8 +275,16 @@ h3 { font-size: 1.05rem; margin-top: 1.5rem; }
 .price-list-table tr.row-b {
   background: #ecfdf5;
 }
+.price-list-table tr.row-b-auto {
+  background: #f3f4f6;  /* グレー：自動入力行 */
+  color: #6b7280;
+}
 .choice-cell {
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: center;
 }
 .choice-btn {
   padding: 0.25rem 0.8rem;
@@ -298,6 +306,22 @@ h3 { font-size: 1.05rem; margin-top: 1.5rem; }
   background: #16a34a;
   color: #fff;
   border-color: #16a34a;
+}
+/* 自動入力されたBボタン：緑を薄く */
+.choice-btn.active-b-auto {
+  background: #86efac;
+  color: #166534;
+  border-color: #86efac;
+}
+/* 「自動」ラベル */
+.auto-label {
+  font-size: 0.7rem;
+  color: #9ca3af;
+  background: #e5e7eb;
+  border-radius: 4px;
+  padding: 1px 5px;
+  margin-left: 2px;
+  font-weight: 500;
 }
 
 .warning-box {

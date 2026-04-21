@@ -6,32 +6,92 @@ function fmt_p(p) {
   return Number.isInteger(pct) ? `${pct}%` : `${pct.toFixed(1)}%`
 }
 
-function detectMultipleSwitch(choices) {
-  let transitions = 0
+/**
+ * switchPoint: インデックス（最初にBが選ばれた行）または null
+ * holes: Set<number> — Bゾーン内で手動でAに変えた行のインデックス集合
+ *
+ * 表示ルール:
+ *   i < switchPoint          → A（手動）
+ *   i >= switchPoint & hole  → A（手動オーバーライド）
+ *   i === switchPoint        → B（手動・最初のB）
+ *   i > switchPoint & !hole  → B（自動入力・グレーアウト）
+ */
+function computeRows(switchPoint, holes, n) {
+  return Array.from({ length: n }, (_, i) => {
+    if (switchPoint === null || i < switchPoint) {
+      return { choice: 'A', auto: false }
+    }
+    if (holes.has(i)) {
+      return { choice: 'A', auto: false }
+    }
+    if (i === switchPoint) {
+      return { choice: 'B', auto: false }
+    }
+    return { choice: 'B', auto: true }
+  })
+}
+
+function countTransitions(choices) {
+  let t = 0
   for (let i = 1; i < choices.length; i++) {
-    if (choices[i] !== choices[i - 1]) transitions++
+    if (choices[i] !== choices[i - 1]) t++
   }
-  return transitions > 1
+  return t
 }
 
 export default function TaskBScreen({ question, currentNum, totalNum, onAnswer }) {
-  const [choices, setChoices] = useState(Array(question.price_list.length).fill('A'))
+  const N = question.price_list.length // 19
+
+  const [switchPoint, setSwitchPoint] = useState(null)
+  const [holes, setHoles] = useState(new Set())
   const [warned, setWarned] = useState(false)
 
   useEffect(() => {
-    setChoices(Array(question.price_list.length).fill('A'))
+    setSwitchPoint(null)
+    setHoles(new Set())
     setWarned(false)
   }, [question.question])
 
-  function setChoice(idx, val) {
-    setChoices(prev => {
-      const next = [...prev]
-      next[idx] = val
+  const displayRows = computeRows(switchPoint, holes, N)
+  const choices = displayRows.map(r => r.choice)
+  const hasMultipleSwitch = countTransitions(choices) > 1
+
+  function handleClickB(i) {
+    // i以下を全部Bに（switchPointを左に移動し、i以降のholesをクリア）
+    setSwitchPoint(prev => (prev === null ? i : Math.min(prev, i)))
+    setHoles(prev => {
+      const next = new Set(prev)
+      for (const h of [...next]) {
+        if (h >= i) next.delete(h)
+      }
       return next
     })
   }
 
-  const hasMultipleSwitch = detectMultipleSwitch(choices)
+  function handleClickA(i) {
+    // Bゾーン外（または既にA）なら何もしない
+    if (switchPoint === null || i < switchPoint) return
+
+    let newHoles = new Set([...holes, i])
+    let newSP = switchPoint
+
+    // switchPoint自身がholeになった場合は次の非hole行へ進める
+    while (newSP !== null && newHoles.has(newSP)) {
+      newSP = newSP + 1 < N ? newSP + 1 : null
+    }
+
+    // 新しいswitchPointより前のholesは不要なので削除
+    if (newSP !== null) {
+      for (const h of [...newHoles]) {
+        if (h < newSP) newHoles.delete(h)
+      }
+    } else {
+      newHoles = new Set()
+    }
+
+    setSwitchPoint(newSP)
+    setHoles(newHoles)
+  }
 
   function handleNext() {
     if (hasMultipleSwitch && !warned) {
@@ -48,8 +108,7 @@ export default function TaskBScreen({ question, currentNum, totalNum, onAnswer }
 
       <p>
         以下のくじについて、各行でどちらを好むか選んでください。<br />
-        <strong>スイッチは1回だけ</strong>にしてください（上でAを選んだらその後はAを選び続けることを
-        推奨しますが、1回だけBに切り替えることができます）。
+        くじ（A）を選ぶ → 確実額（B）を選ぶ、の<strong>切り替えは1回のみ</strong>推奨です。
       </p>
 
       <div className="lottery-summary">
@@ -76,26 +135,43 @@ export default function TaskBScreen({ question, currentNum, totalNum, onAnswer }
             </tr>
           </thead>
           <tbody>
-            {question.price_list.map((amount, i) => (
-              <tr key={i} className={choices[i] === 'B' ? 'row-b' : 'row-a'}>
-                <td>{i + 1}</td>
-                <td>上記のくじ</td>
-                <td>確実に {amount}円</td>
-                <td className="choice-cell">
-                  <button
-                    className={`choice-btn ${choices[i] === 'A' ? 'active-a' : ''}`}
-                    onClick={() => setChoice(i, 'A')}
-                  >A</button>
-                  <button
-                    className={`choice-btn ${choices[i] === 'B' ? 'active-b' : ''}`}
-                    onClick={() => setChoice(i, 'B')}
-                  >B</button>
-                </td>
-              </tr>
-            ))}
+            {question.price_list.map((amount, i) => {
+              const { choice, auto } = displayRows[i]
+              const rowClass = choice === 'A' ? 'row-a' : auto ? 'row-b-auto' : 'row-b'
+              return (
+                <tr key={i} className={rowClass}>
+                  <td>{i + 1}</td>
+                  <td>上記のくじ</td>
+                  <td>確実に {amount}円</td>
+                  <td className="choice-cell">
+                    <button
+                      className={`choice-btn ${choice === 'A' ? 'active-a' : ''}`}
+                      onClick={() => handleClickA(i)}
+                    >
+                      A
+                    </button>
+                    <button
+                      className={`choice-btn ${
+                        choice === 'B' ? (auto ? 'active-b-auto' : 'active-b') : ''
+                      }`}
+                      onClick={() => handleClickB(i)}
+                    >
+                      B
+                    </button>
+                    {auto && (
+                      <span className="auto-label">自動</span>
+                    )}
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </div>
+
+      <p className="hint" style={{ marginTop: '0.5rem' }}>
+        ※ 「自動」と表示された行はBが自動入力されています。変更したい場合はAボタンを押してください。
+      </p>
 
       <button className="btn-primary" onClick={handleNext}>
         {hasMultipleSwitch && !warned ? '回答を確認（複数スイッチあり）' : '次の問題へ'}

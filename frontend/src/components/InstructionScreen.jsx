@@ -36,13 +36,13 @@ export default function InstructionScreen({ onNext }) {
 
         <h3>【全体の流れ】</h3>
         <ol>
-          <li>課題A：55問（CE直接入力）</li>
+          <li>課題A：33問（CE直接入力）</li>
           <li>休憩（約2分）</li>
           <li>課題B：11問（Price list選択）</li>
           <li>信頼性確認：9問（課題Aの繰り返し）</li>
           <li>報酬計算・結果表示</li>
         </ol>
-        <p>所要時間：約30分</p>
+        <p>所要時間：約20分</p>
       </div>
 
       <button className="btn-primary" onClick={onNext}>

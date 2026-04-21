@@ -1,0 +1,376 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+  background: #f5f7fa;
+  color: #222;
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem 1rem;
+}
+
+/* ── screen wrapper ── */
+.screen {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.09);
+  padding: 2rem 2.5rem;
+  width: 100%;
+  max-width: 760px;
+}
+
+h1 { font-size: 1.7rem; margin-top: 0; color: #1a3a5c; }
+h2 { font-size: 1.3rem; color: #1a3a5c; }
+h3 { font-size: 1.05rem; margin-top: 1.5rem; }
+
+/* ── progress bar ── */
+.progress-wrap {
+  margin-bottom: 1.5rem;
+}
+.progress-label {
+  font-size: 0.85rem;
+  color: #555;
+  margin-bottom: 4px;
+}
+.progress-track {
+  height: 8px;
+  background: #dde3ec;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: #2563eb;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* ── buttons ── */
+.btn-primary {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.7rem 2rem;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-primary:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+.btn-primary:disabled {
+  background: #aab4c8;
+  cursor: not-allowed;
+}
+
+.btn-download {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.7rem 2rem;
+  background: #16a34a;
+  color: #fff;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.btn-download:hover {
+  background: #15803d;
+}
+
+/* ── setup form ── */
+.setup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  max-width: 400px;
+  margin-top: 1.5rem;
+}
+.setup-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-weight: 600;
+}
+.setup-form input {
+  padding: 0.55rem 0.8rem;
+  border: 1.5px solid #ccd3df;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+.setup-form input:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+/* ── instruction box ── */
+.instruction-box {
+  background: #f0f4ff;
+  border-left: 4px solid #2563eb;
+  border-radius: 6px;
+  padding: 1.2rem 1.5rem;
+  margin: 1rem 0;
+  line-height: 1.7;
+}
+.instruction-box ol {
+  padding-left: 1.5rem;
+}
+
+.example-box {
+  background: #fff8e1;
+  border: 1px solid #f59e0b;
+  border-radius: 6px;
+  padding: 0.8rem 1rem;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+/* ── practice badge ── */
+.practice-badge {
+  display: inline-block;
+  background: #f59e0b;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.25rem 0.8rem;
+  border-radius: 20px;
+  margin-bottom: 0.8rem;
+}
+
+/* ── lottery box ── */
+.lottery-box {
+  border: 2px solid #2563eb;
+  border-radius: 10px;
+  padding: 1.2rem 1.5rem;
+  margin: 1.2rem 0;
+  background: #f0f4ff;
+}
+.lottery-row {
+  font-size: 1.1rem;
+  padding: 0.4rem 0;
+}
+.lottery-row.win { color: #1d4ed8; }
+.lottery-row.lose { color: #666; }
+.lottery-row .prob {
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+.lottery-row .amount {
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+/* ── CE input ── */
+.ce-input-group {
+  margin: 1rem 0;
+}
+.ce-input-group label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+.ce-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.ce-input-row input {
+  width: 160px;
+  padding: 0.6rem 0.8rem;
+  font-size: 1.1rem;
+  border: 2px solid #ccd3df;
+  border-radius: 6px;
+  text-align: right;
+}
+.ce-input-row input:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+.ce-input-row span {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* ── hint / error ── */
+.hint {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 0.3rem 0;
+}
+.error {
+  color: #dc2626;
+  font-size: 0.9rem;
+  margin: 0.3rem 0;
+}
+
+/* ── break screen ── */
+.break-msg { font-size: 1.1rem; font-weight: 600; }
+.timer {
+  font-size: 4rem;
+  font-weight: 700;
+  color: #2563eb;
+  text-align: center;
+  margin: 1.5rem 0;
+  letter-spacing: 0.05em;
+}
+.timer-done {
+  font-size: 1.5rem;
+  color: #16a34a;
+  font-weight: 700;
+  text-align: center;
+  margin: 1rem 0;
+}
+.break-info {
+  background: #f0f4ff;
+  border-radius: 6px;
+  padding: 0.8rem 1rem;
+  margin: 1rem 0;
+}
+
+/* ── task B ── */
+.lottery-summary {
+  background: #f0f4ff;
+  border-radius: 8px;
+  padding: 0.8rem 1.2rem;
+  margin: 0.8rem 0 1rem;
+  font-size: 1rem;
+}
+.price-list-table-wrap {
+  overflow-x: auto;
+  margin: 0.5rem 0;
+}
+.price-list-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.price-list-table th {
+  background: #1a3a5c;
+  color: #fff;
+  padding: 0.5rem 0.8rem;
+  text-align: center;
+}
+.price-list-table td {
+  padding: 0.4rem 0.8rem;
+  text-align: center;
+  border-bottom: 1px solid #e5e7eb;
+}
+.price-list-table tr.row-a {
+  background: #f0f4ff;
+}
+.price-list-table tr.row-b {
+  background: #ecfdf5;
+}
+.choice-cell {
+  white-space: nowrap;
+}
+.choice-btn {
+  padding: 0.25rem 0.8rem;
+  margin: 0 2px;
+  border: 2px solid #ccd3df;
+  border-radius: 5px;
+  background: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.15s;
+}
+.choice-btn.active-a {
+  background: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
+}
+.choice-btn.active-b {
+  background: #16a34a;
+  color: #fff;
+  border-color: #16a34a;
+}
+
+.warning-box {
+  background: #fef2f2;
+  border: 2px solid #dc2626;
+  border-radius: 8px;
+  color: #dc2626;
+  padding: 0.8rem 1rem;
+  margin: 0.8rem 0;
+  font-weight: 600;
+}
+
+/* ── reliability note ── */
+.reliability-note {
+  background: #fff8e1;
+  border-left: 4px solid #f59e0b;
+  border-radius: 6px;
+  padding: 0.7rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+/* ── reward screen ── */
+.thanks {
+  font-size: 1.1rem;
+  color: #16a34a;
+  font-weight: 700;
+}
+.reward-box {
+  background: #f8fafc;
+  border: 2px solid #2563eb;
+  border-radius: 12px;
+  padding: 1.5rem 2rem;
+  margin: 1.5rem 0;
+}
+.reward-selected {
+  margin-bottom: 1rem;
+  line-height: 1.8;
+}
+.reward-detail {
+  margin-top: 1rem;
+  line-height: 1.8;
+}
+.reward-rule {
+  background: #f0f4ff;
+  border-radius: 6px;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.95rem;
+}
+.reward-amount {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1a3a5c;
+  margin-top: 1rem;
+  text-align: center;
+}
+.reward-amount span {
+  font-size: 2rem;
+  color: #2563eb;
+}
+.win { color: #16a34a; }
+.lose { color: #dc2626; }
+
+/* ── spinner ── */
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #dde3ec;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 2rem auto;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
